@@ -1,0 +1,23 @@
+{
+  "name": "redis-json",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdeerhake/node-redis-json.git"
+  },
+  "author": "John M Deerhake <jdeerhake@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jdeerhake/node-redis-json/issues"
+  },
+  "homepage": "https://github.com/jdeerhake/node-redis-json#readme",
+  "dependencies": {
+    "lodash": "^4.6.1",
+    "redis": "^2.4.2"
+  }
+}
