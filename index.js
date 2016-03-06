@@ -2,6 +2,7 @@
 
 const redis = require( 'redis' )
 const _ = require( 'lodash' )
+const match = require( './match' )
 
 class RedisJSON {
 
@@ -10,8 +11,9 @@ class RedisJSON {
     this._recv = redis.createClient( redisOpts )
     this._handlers = {}
     this._channels = []
+    this._defaults = {}
 
-    this._recv.on( 'message', this._handleMessage )
+    this._recv.on( 'message', this._handleMessage.bind( this ) )
   }
 
   handle( channel, handler ) {
@@ -21,13 +23,18 @@ class RedisJSON {
   }
 
   send( channel, obj ) {
-    this._send.publish( channel, JSON.stringify( obj ) )
+    const send = _.extend( {}, this._defaults, obj )
+    this._send.publish( channel, JSON.stringify( send ) )
+  }
+
+  addDefault( key, value ) {
+    this._defaults[ key ] = value
   }
 
   _handleMessage( channel, msg ) {
     msg = JSON.parse( msg )
-    this.handlers[ channel ]
-      .filter( h => h.when( msg ) )
+    this._handlers[ channel ]
+      .filter( h => match( h.when, msg ) )
       .forEach( h => h.do( msg ) )
   }
 
@@ -36,7 +43,7 @@ class RedisJSON {
   }
 
   _subscribe( channel ) {
-    this._recv.subcribe( channel )
+    this._recv.subscribe( channel )
     this._channels.push( channel )
   }
 
